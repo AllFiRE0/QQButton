@@ -1,0 +1,113 @@
+# Основные настройки
+settings:
+  prefix: "&7[&6QQ&7]"
+  actionbar-refresh-ticks: 20
+  update-interval: 30  # Секунд между обновлениями кнопки
+
+# ============================================
+# НАСТРОЙКА КНОПОК
+# Кнопки проверяются по порядку сверху вниз.
+# Первая подходящая кнопка будет показана.
+# ============================================
+buttons:
+  # ===== ПРИМЕР 1: АДМИН-ПАНЕЛЬ =====
+  # Условия: баланс >= 1000 И право admin.panel
+  - name: "<gold><bold>⚡ Админ-панель</bold></gold>"
+    url: "https://your-server.com/admin"
+    permission: "admin.panel"
+    conditions_and:
+      - placeholder: "%vault_eco_balance%"
+        operator: ">="
+        value: "1000"
+    commands:
+      - "message! &aПривет, %player_name%!"
+      - "sound! ENTITY_PLAYER_LEVELUP 1.0 1.0"
+      - "asConsole! say Игрок %player_name% открыл админ-панель"
+      - "asPlayer! menu open admin"
+      - "title:10:30:10! <gold>Админ-панель\\n<gray>Добро пожаловать!</gray>"
+      - "actionbar:40! &bВы вошли в админ-панель"
+
+  # ===== ПРИМЕР 2: VIP МЕНЮ =====
+  # Условия: право vip.menu И баланс >= 500
+  - name: "<gradient:#FFD700:#FFA500><bold>💎 VIP Меню</bold></gradient>"
+    url: "https://your-server.com/vip"
+    permission: "vip.menu"
+    conditions_and:
+      - placeholder: "%vault_eco_balance%"
+        operator: ">="
+        value: "500"
+      - placeholder: "%luckperms_primary_group_name%"
+        operator: "=="
+        value: "VIP"
+    commands:
+      - "message! &6&lVIP Меню открыто!"
+      - "sound! ENTITY_PLAYER_LEVELUP 0.5 1.5"
+      - "asPlayer! shop open vip"
+      - "delay! 10"
+      - "message! &7Используй &e/menu &7для навигации"
+
+  # ===== ПРИМЕР 3: ССЫЛКИ СЕРВЕРА (OR) =====
+  # Условия: право links.use ИЛИ ник содержит "AllFiRE"
+  - name: "<gradient:#829FCD:#9EB1E6><bold>🌐 Ссылки сервера</bold></gradient>"
+    url: "https://your-server.com/links"
+    conditions_any:
+      - placeholder: "%player_has_permission_links.use%"
+        operator: "=="
+        value: "true"
+      - placeholder: "%player_name%"
+        operator: "!~"
+        value: "AllFiRE"
+    commands:
+      - "message! &7Открываю ссылки сервера..."
+      - "sound! BLOCK_NOTE_BLOCK_PLING 1.0 1.0"
+
+  # ===== ПРИМЕР 4: КНОПКА ДЛЯ БОГАТЫХ =====
+  # Условие: баланс между 1000 и 5000
+  - name: "<green><bold>💰 Богатый игрок</bold></green>"
+    url: "https://your-server.com/rich"
+    conditions_and:
+      - placeholder: "%vault_eco_balance%"
+        operator: ">="
+        value: "1000"
+      - placeholder: "%vault_eco_balance%"
+        operator: "<="
+        value: "5000"
+    commands:
+      - "message! &a&lТы богат! Бонус 100 монет!"
+      - "asConsole! eco give %player_name% 100"
+      - "sound! ENTITY_PLAYER_LEVELUP 1.0 2.0"
+
+  # ===== ПРИМЕР 5: КНОПКА ДЛЯ НОВЫХ ИГРОКОВ =====
+  # Условие: стаж меньше 1 часа
+  - name: "<gradient:#FF6B6B:#FFA500><bold>🎁 Новый игрок!</bold></gradient>"
+    url: "https://your-server.com/newbie"
+    conditions:
+      - placeholder: "%player_playtime_hours%"
+        operator: "<"
+        value: "1"
+    commands:
+      - "message! &a&lПривет, новичок! Получи бонус!"
+      - "title! <gold>Добро пожаловать!\\n<gray>Бонус 100 монет</gray>"
+      - "asConsole! eco give %player_name% 100"
+      - "sound! ENTITY_FIREWORK_ROCKET_TWINKLE 1.0 1.0"
+      - "gMessage! &aИгрок %player_name% присоединился к нам!"
+
+  # ===== ПРИМЕР 6: КНОПКА ПО УМОЛЧАНИЮ =====
+  # Показывается если ни одна кнопка не подошла
+  - name: "<gray><bold>🔗 Ссылки сервера</bold></gray>"
+    url: "https://your-server.com/default"
+    conditions: []  # Пустые условия = всегда показывается, если дошло до неё
+    commands:
+      - "message! &7Добро пожаловать на сервер!"
+      - "sound! BLOCK_NOTE_BLOCK_PLING 0.5 1.0"
+
+# ============================================
+# КНОПКА ПО УМОЛЧАНИЮ (Fallback)
+# Показывается, если ни одна кнопка из списка не подошла
+# ============================================
+default:
+  name: "<color:#FF6B6B><bold>❌ Кнопка недоступна</bold></color>"
+  url: "https://your-server.com/no-access"
+  commands:
+    - "message! &cУ вас нет доступа к этой кнопке"
+    - "sound! BLOCK_NOTE_BLOCK_BASS 1.0 0.5"
