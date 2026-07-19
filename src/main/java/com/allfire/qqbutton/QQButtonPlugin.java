@@ -13,6 +13,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.ServerLinks;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -109,10 +110,7 @@ public final class QQButtonPlugin extends JavaPlugin implements Listener {
         ServerLinks serverLinks = Bukkit.getServerLinks();
         if (serverLinks == null) return;
 
-        try {
-            serverLinks.removeAll();
-        } catch (NoSuchMethodError e) {
-        }
+        clearServerLinks(serverLinks);
 
         List<Map<?, ?>> buttons = configManager.getButtons();
 
@@ -161,10 +159,27 @@ public final class QQButtonPlugin extends JavaPlugin implements Listener {
             }
         }
 
+        sendServerLinksUpdate(player);
+    }
+
+    private void clearServerLinks(ServerLinks serverLinks) {
         try {
-            player.sendServerLinksUpdate();
-        } catch (NoSuchMethodError e) {
-        }
+            Method clearMethod = serverLinks.getClass().getMethod("clear");
+            clearMethod.invoke(serverLinks);
+            return;
+        } catch (Exception ignored) {}
+
+        try {
+            Method removeAllMethod = serverLinks.getClass().getMethod("removeAll");
+            removeAllMethod.invoke(serverLinks);
+        } catch (Exception ignored) {}
+    }
+
+    private void sendServerLinksUpdate(Player player) {
+        try {
+            Method updateMethod = player.getClass().getMethod("sendServerLinksUpdate");
+            updateMethod.invoke(player);
+        } catch (Exception ignored) {}
     }
 
     private boolean checkConditions(Player player, Map<?, ?> button) {
