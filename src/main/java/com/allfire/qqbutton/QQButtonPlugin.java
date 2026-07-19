@@ -76,11 +76,9 @@ public final class QQButtonPlugin extends JavaPlugin implements Listener {
                 return true;
             }
 
-            // Перезагружаем конфиг
             configManager.reload();
             reloadConfig();
 
-            // Обновляем ссылки у всех игроков
             for (Player player : Bukkit.getOnlinePlayers()) {
                 updateServerLinks(player);
             }
@@ -111,7 +109,10 @@ public final class QQButtonPlugin extends JavaPlugin implements Listener {
         ServerLinks serverLinks = Bukkit.getServerLinks();
         if (serverLinks == null) return;
 
-        serverLinks.clear();
+        try {
+            serverLinks.removeAll();
+        } catch (NoSuchMethodError e) {
+        }
 
         List<Map<?, ?>> buttons = configManager.getButtons();
 
@@ -160,7 +161,10 @@ public final class QQButtonPlugin extends JavaPlugin implements Listener {
             }
         }
 
-        player.sendServerLinksUpdate();
+        try {
+            player.sendServerLinksUpdate();
+        } catch (NoSuchMethodError e) {
+        }
     }
 
     private boolean checkConditions(Player player, Map<?, ?> button) {
