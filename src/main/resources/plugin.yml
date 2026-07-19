@@ -1,0 +1,29 @@
+name: QQButton
+version: 1.0.0
+main: com.allfire.qqbutton.QQButtonPlugin
+api-version: 1.21
+author: AllFiRE
+description: Динамическая кнопка в меню ESC с проверкой условий и выполнением команд
+website: https://github.com/AllFiRE/QQButton
+
+depend:
+  - PlaceholderAPI
+
+softdepend: []
+
+commands:
+  qqbutton:
+    description: Основная команда плагина
+    usage: /<command> reload
+    aliases: [qbt, qb]
+
+permissions:
+  qqbutton.use:
+    description: Разрешает использовать кнопку
+    default: true
+  qqbutton.admin:
+    description: Доступ к административным командам
+    default: op
+  qqbutton.bypass.cooldown:
+    description: Игнорирование задержек
+    default: op
